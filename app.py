@@ -2,6 +2,9 @@ import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
 
 # Load pre-trained models
 logistic_pipe = joblib.load('logistic_model.pkl')
@@ -111,7 +114,7 @@ if st.sidebar.button('Predict'):
         st.write(f"**Error in Naive Bayes prediction:** {e}")
 
     try:
-        # Make predictions with Decision Tree
+        # Make predictions with Decision Trees
         decision_tree_pred = decision_tree_pipe.predict(input_df)
         result_decision_tree = 'Accepted for Credit' if decision_tree_pred[0] == 1 else 'Rejected for Credit'
         st.write(f"### Decision Tree Result: **{result_decision_tree}**")
