@@ -5,6 +5,9 @@ import os
 # Function to load a pickled model
 @st.cache
 def load_model(file_path):
+    # Print the current directory for debugging
+    st.write(f"Attempting to load model from: {file_path}")
+    
     if not os.path.isfile(file_path):
         st.error(f"Error loading model: {file_path} not found. Current directory: {os.getcwd()}")
         return None
@@ -19,13 +22,12 @@ def load_model(file_path):
 # Load the models
 logistic_model = load_model('Logistic_Regression_model.pkl')
 decision_tree_model = load_model('Decision_Tree_model.pkl')
-random_forest_model = load_model('Random_Forest_model.pkl')
 
 # Streamlit UI
 st.title("Model Deployment with Streamlit")
 
 st.sidebar.title("Options")
-option = st.sidebar.selectbox("Select Model", ["Logistic Regression", "Decision Tree", "Random Forest"])
+option = st.sidebar.selectbox("Select Model", ["Logistic Regression", "Decision Tree"])
 
 st.subheader("Input Features")
 # Example input fields; adjust as needed for your model
@@ -41,8 +43,6 @@ if st.button("Predict"):
         model = logistic_model
     elif option == "Decision Tree":
         model = decision_tree_model
-    elif option == "Random Forest":
-        model = random_forest_model
 
     if model:
         try:
