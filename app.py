@@ -6,11 +6,15 @@ import os
 @st.cache
 def load_model(file_path):
     if not os.path.isfile(file_path):
-        st.error(f"Error loading model: {file_path} not found")
+        st.error(f"Error loading model: {file_path} not found. Current directory: {os.getcwd()}")
         return None
-    with open(file_path, 'rb') as file:
-        model = pickle.load(file)
-    return model
+    try:
+        with open(file_path, 'rb') as file:
+            model = pickle.load(file)
+        return model
+    except Exception as e:
+        st.error(f"Error loading model: {e}")
+        return None
 
 # Load the models
 logistic_model = load_model('Logistic_Regression_model.pkl')
@@ -41,7 +45,10 @@ if st.button("Predict"):
         model = random_forest_model
 
     if model:
-        prediction = model.predict([input_data])
-        st.write(f"Prediction: {prediction[0]}")
+        try:
+            prediction = model.predict([input_data])
+            st.write(f"Prediction: {prediction[0]}")
+        except Exception as e:
+            st.error(f"Error making prediction: {e}")
     else:
         st.write("Model could not be loaded.")
