@@ -2,14 +2,15 @@ import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import GaussianNB
-from sklearn.tree import DecisionTreeClassifier
 
-# Load pre-trained models
-logistic_pipe = joblib.load('logistic_model.pkl')
-naive_bayes_pipe = joblib.load('naive_bayes_model.pkl')
-decision_tree_pipe = joblib.load('decision_tree_model.pkl')
+# Load pre-trained models with error handling
+try:
+    logistic_pipe = joblib.load('logistic_model.pkl')
+    naive_bayes_pipe = joblib.load('naive_bayes_model.pkl')
+    decision_tree_pipe = joblib.load('decision_tree_model.pkl')
+except FileNotFoundError as e:
+    st.error(f"Error loading model: {e}")
+    st.stop()
 
 # Define all feature columns used during model training
 all_feature_cols = [
@@ -101,7 +102,7 @@ if st.sidebar.button('Predict'):
         # Make predictions with Logistic Regression
         logistic_pred = logistic_pipe.predict(input_df)
         result_logistic = 'Accepted for Credit' if logistic_pred[0] == 1 else 'Rejected for Credit'
-        st.write(f"### Logistic Regression Result: **{result_logistic}**")
+        st.write(f"### Logistic Regression: **{result_logistic}**")
     except Exception as e:
         st.write(f"**Error in Logistic Regression prediction:** {e}")
 
@@ -109,14 +110,14 @@ if st.sidebar.button('Predict'):
         # Make predictions with Naive Bayes
         naive_bayes_pred = naive_bayes_pipe.predict(input_df)
         result_naive_bayes = 'Accepted for Credit' if naive_bayes_pred[0] == 1 else 'Rejected for Credit'
-        st.write(f"### Naive Bayes Result: **{result_naive_bayes}**")
+        st.write(f"### Naive Bayes: **{result_naive_bayes}**")
     except Exception as e:
         st.write(f"**Error in Naive Bayes prediction:** {e}")
 
     try:
-        # Make predictions with Decision Trees
+        # Make predictions with Decision Tree
         decision_tree_pred = decision_tree_pipe.predict(input_df)
         result_decision_tree = 'Accepted for Credit' if decision_tree_pred[0] == 1 else 'Rejected for Credit'
-        st.write(f"### Decision Tree Result: **{result_decision_tree}**")
+        st.write(f"### Decision Tree: **{result_decision_tree}**")
     except Exception as e:
         st.write(f"**Error in Decision Tree prediction:** {e}")
