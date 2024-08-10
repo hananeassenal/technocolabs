@@ -5,7 +5,6 @@ import os
 # Function to load a pickled model
 @st.cache
 def load_model(file_path):
-    # Print the current directory for debugging
     st.write(f"Attempting to load model from: {file_path}")
     
     if not os.path.isfile(file_path):
@@ -30,13 +29,18 @@ st.sidebar.title("Options")
 option = st.sidebar.selectbox("Select Model", ["Logistic Regression", "Decision Tree"])
 
 st.subheader("Input Features")
-# Example input fields; adjust as needed for your model
-feature1 = st.number_input("Feature 1", value=0.0)
-feature2 = st.number_input("Feature 2", value=0.0)
-feature3 = st.number_input("Feature 3", value=0.0)
 
-# Collecting input data
-input_data = [feature1, feature2, feature3]
+# Adjust the number of input fields based on the model selected
+if option == "Logistic Regression":
+    num_features = 10  # Assuming the Logistic Regression model expects 10 features
+elif option == "Decision Tree":
+    num_features = 3  # Adjust this number based on your Decision Tree model
+
+# Create input fields dynamically based on the number of features
+input_data = []
+for i in range(num_features):
+    input_value = st.number_input(f"Feature {i+1}", value=0.0)
+    input_data.append(input_value)
 
 if st.button("Predict"):
     if option == "Logistic Regression":
