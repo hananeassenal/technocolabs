@@ -25,7 +25,8 @@ combined_pipeline = load_model('combined_pipeline.pkl')
 st.title("Model Deployment with Streamlit")
 
 st.sidebar.title("Options")
-option = st.sidebar.selectbox("Select Model", ["Logistic Regression", "Decision Tree", "Combined Pipeline"])
+# Only one option now, since only the Combined Pipeline is available
+option = st.sidebar.selectbox("Select Model", ["Combined Pipeline"])
 
 st.subheader("Input Features")
 # Input fields for the features
@@ -35,18 +36,11 @@ input_features = [st.number_input(f"Feature {i+1}", value=0.0) for i in range(10
 input_data = [input_features]
 
 if st.button("Predict"):
-    model = None
-    
-    if option == "Combined Pipeline":
-        model = combined_pipeline
-    elif option in ["Logistic Regression", "Decision Tree"]:
-        st.error(f"The '{option}' model is not available. Only 'Combined Pipeline' is implemented.")
-    
-    if model:
+    if option == "Combined Pipeline" and combined_pipeline:
         try:
-            prediction = model.predict(input_data)
+            prediction = combined_pipeline.predict(input_data)
             st.write(f"Prediction: {prediction[0]}")
         except Exception as e:
             st.error(f"Error making prediction: {e}")
     else:
-        st.write("Please select a valid model.")
+        st.write("Model could not be loaded.")
